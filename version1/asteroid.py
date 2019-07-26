@@ -57,8 +57,6 @@ class Asteroid(PhysicalObject):
 
 asteroids = [Asteroid(randint(0, 2)) for i in range(3)]
 
-game_objects = [player_ship] + asteroids
-
 player_ship = PhysicalObject(img=player_image, x=400, y=300)
 
 
@@ -73,16 +71,8 @@ def player_lives(num_icons, batch=None):
     return playerlives
 
 
-
-
-
-
-
-
-
 def tick(dt):
     for po in game_objects:
-
         po.tick()
 
 
@@ -116,6 +106,9 @@ def on_draw():
     for lives in player_lives(5):
         lives.draw()
     for asteroid in asteroids:
+        asteroid.vector_direction(randint(0, 50))
+        asteroid.vector_magnitude(randint(0, 50))
+        asteroid.vector_direction(randint(0, 50))
         asteroid.draw()
 
 
