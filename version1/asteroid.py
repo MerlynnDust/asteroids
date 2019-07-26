@@ -1,6 +1,7 @@
 import pyglet
 from random import randint
 import math
+from math import sin, cos, radians
 
 win = pyglet.window.Window()
 main_batch = pyglet.graphics.Batch()
@@ -21,33 +22,7 @@ asteroidImage = pyglet.resource.image('ast1.png')
 asteroidSmallImage = pyglet.resource.image('ast2.png')
 
 
-class Asteroid(pyglet.sprite.Sprite):
-    def __init__(self, size=0):
-        super(Asteroid, self).__init__(asteroidSmallImage if size == 0 else asteroidImage,
-                                       randint(0, 640),
-                                       randint(0, 480)
-                                       )
-        self.rotation = randint(0, 360)
-        direction = randint(0, 360)
-        speed = randint(0, 10)
-
-
-def player_lives(num_icons, batch=None):
-    playerlives = []
-    for i in range(num_icons):
-        new_sprite = pyglet.sprite.Sprite(img=player_image,
-                                          x=win.width * .9 - i * 30, y=win.height * .9)
-        new_sprite.scale = 0.5
-        playerlives.append(new_sprite)
-    return playerlives
-
-
-
-
-asteroids = [Asteroid(randint(0, 2)) for i in range(3)]
-
-
-game_objects = [player_ship] + asteroids
+game_objects = []
 
 class PhysicalObject(pyglet.sprite.Sprite):
     def __init__(self, *args, **kwargs):
@@ -67,6 +42,43 @@ class PhysicalObject(pyglet.sprite.Sprite):
     def delete(self):
         super(PhysicalObject, self).delete()
         game_objects.remove(self)
+
+
+class Asteroid(PhysicalObject):
+    def __init__(self, size=0):
+        super(Asteroid, self).__init__(asteroidSmallImage if size == 0 else asteroidImage,
+                                       randint(0, 640),
+                                       randint(0, 480)
+                                       )
+        self.rotation = randint(0, 360)
+        direction = randint(0, 360)
+        speed = randint(0, 10)
+
+
+asteroids = [Asteroid(randint(0, 2)) for i in range(3)]
+
+game_objects = [player_ship] + asteroids
+
+player_ship = PhysicalObject(img=player_image, x=400, y=300)
+
+
+
+def player_lives(num_icons, batch=None):
+    playerlives = []
+    for i in range(num_icons):
+        new_sprite = pyglet.sprite.Sprite(img=player_image,
+                                          x=win.width * .9 - i * 30, y=win.height * .9)
+        new_sprite.scale = 0.5
+        playerlives.append(new_sprite)
+    return playerlives
+
+
+
+
+
+
+
+
 
 def tick(dt):
     for po in game_objects:
